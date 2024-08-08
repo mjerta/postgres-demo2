@@ -2,7 +2,7 @@ name: Deploy
 
 # Controls when the action will run. 
 on:
-  # Triggers the workflow on push or pull request events but only for the master branch
+  # Triggers the workflow on push or pull request events but only for the main branch
   push:
     branches: [ main ]
 
@@ -15,7 +15,7 @@ jobs:
 
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:       
-    - name: Deploy using ssh
+    - name: Deploy using SSH
       uses: appleboy/ssh-action@master
       with:
         host: ${{ secrets.HOST }}
@@ -23,6 +23,17 @@ jobs:
         key: ${{ secrets.SSH_PRIVATE_KEY }}
         port: 22
         script: |
+          # Change directory to the initial project location
           cd /var/www/postgres-demo2/
-          git pull github main
-          echo "A git pull has been executed! on repo MPDEV" >> /var/log/github-actions
+
+          # Pull the latest changes from the repository
+          git pull origin main
+
+          # Change directory to the Docker setup location
+          cd /opt/docker-setups/maven
+
+          # Build and start Docker containers in detached mode
+          docker-compose up --build -d
+
+          # Optionally, log the actions performed
+          echo "Docker containers have been built and started in detached mode" >> /var/log/github-actions
