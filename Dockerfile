@@ -15,6 +15,13 @@ RUN mvn clean package -DskipTests
 # Use an official Amazon Corretto runtime as a parent image
 FROM amazoncorretto:21
 
+
+# Set the working directory inside the container
+WORKDIR /app
+
+# Set the Spring profile to 'remote'
+ENV SPRING_PROFILES_ACTIVE=remote
+
 # Set the working directory inside the container
 WORKDIR /app
 
