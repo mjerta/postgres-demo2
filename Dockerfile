@@ -15,15 +15,11 @@ RUN mvn clean package -DskipTests
 # Use an official Amazon Corretto runtime as a parent image
 FROM amazoncorretto:21
 
-
 # Set the working directory inside the container
 WORKDIR /app
 
 # Set the Spring profile to 'remote'
 ENV SPRING_PROFILES_ACTIVE=remote
-
-# Set the working directory inside the container
-WORKDIR /app
 
 # Copy the JAR file from the build stage
 COPY --from=build /app/target/postgres-demo2-0.0.1-SNAPSHOT.jar app.jar
