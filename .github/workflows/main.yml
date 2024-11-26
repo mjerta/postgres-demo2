@@ -1,19 +1,37 @@
-name: My Deploy
+name: Deploy
 
 on:
   push:
-    branches: [ main ]
+    branches:
+      - master
+      - develop
   pull_request:
-    branches: [ main ]
+    branches:
+      - master
+      - develop
   workflow_dispatch:
 
 jobs:
-  build:
+  deploy:
     runs-on: ubuntu-latest
+
     steps:
-      - name: Deploy to production
+      - name: Deploy to Render
         uses: johnbeynon/render-deploy-action@v0.0.8
         with:
-          service-id: ${{ secrets.MY_RENDER_SERVICE_ID }}
-          api-key: ${{ secrets.MY_RENDER_API_KEY }}
+          service-id: ${{ secrets.RENDER_SERVICE_ID }}
+          api-key: ${{ secrets.RENDER_API_KEY }}
           wait-for-success: true
+        env:
+          SERVICE_ID: ${{ secrets.RENDER_SERVICE_ID_PRODUCTION }}
+        if: github.ref == 'refs/heads/master' # Deploy to production only on master
+
+      - name: Deploy to Staging
+        uses: johnbeynon/render-deploy-action@v0.0.8
+        with:
+          service-id: ${{ secrets.RENDER_SERVICE_ID_STAGING }}
+          api-key: ${{ secrets.RENDER_API_KEY }}
+          wait-for-success: true
+        env:
+          SERVICE_ID: ${{ secrets.RENDER_SERVICE_ID_STAGING }}
+        if: github.ref == 'refs/heads/develop' # Deploy to staging only on develop
