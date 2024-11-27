@@ -10,13 +10,19 @@ import java.net.URI;
 import java.util.List;
 
 @RestController
-@RequestMapping("/product")
+@RequestMapping("/products")
 public class ProductController {
 
   private final ProductRepository productRepository;
 
   public ProductController(ProductRepository productRepository) {
     this.productRepository = productRepository;
+  }
+
+  @GetMapping("/{id}")
+  public ResponseEntity<Product> getProduct(@PathVariable Long id) {
+    var test =  productRepository.findById(id).orElseThrow(() -> new RuntimeException("test"));
+    return ResponseEntity.ok().body(test);
   }
 
   @GetMapping
