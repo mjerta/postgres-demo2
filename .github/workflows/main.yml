@@ -2,6 +2,7 @@ name: Deploy
 
 on:
   push:
+<<<<<<< HEAD
     branches:
       - master
       - develop
@@ -13,6 +14,19 @@ on:
 
 jobs:
   deploy:
+=======
+    branches: 
+      - master
+      - develop
+  pull_request:
+    branches: 
+      - master
+      - develop
+
+jobs:
+  deploy-to-production:
+    if: github.ref == 'refs/heads/master'
+>>>>>>> aa9a5d8a869356b3d56c3c677e53b79670e65a36
     runs-on: ubuntu-latest
 
     steps:
@@ -22,6 +36,7 @@ jobs:
           service-id: ${{ secrets.RENDER_SERVICE_ID }}
           api-key: ${{ secrets.RENDER_API_KEY }}
           wait-for-success: true
+<<<<<<< HEAD
         env:
           SERVICE_ID: ${{ secrets.RENDER_SERVICE_ID_PRODUCTION }}
         if: github.ref == 'refs/heads/master' # Deploy to production only on master
@@ -35,3 +50,17 @@ jobs:
         env:
           SERVICE_ID: ${{ secrets.RENDER_SERVICE_ID_STAGING }}
         if: github.ref == 'refs/heads/develop' # Deploy to staging only on develop
+=======
+
+  deploy-to-develop:
+    if: github.ref == 'refs/heads/develop'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Deploy to develop
+        uses: johnbeynon/render-deploy-action@v0.0.8
+        with:
+          service-id: ${{ secrets.DEV_RENDER_SERVICE_ID }}
+          api-key: ${{ secrets.DEV_RENDER_API_KEY }}
+          wait-for-success: true
+
+>>>>>>> aa9a5d8a869356b3d56c3c677e53b79670e65a36
